@@ -20,7 +20,7 @@ tracks/0/keys = { "times":FloatArray( 0, 0.5, 1 ), "transitions":FloatArray( 1, 
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
 
-[node name="character" type="Node2D"]
+[node name="character" type="Node2D" groups=[ "unit" ]]
 
 script/script = ExtResource( 1 )
 
@@ -60,7 +60,7 @@ frame = 35
 [node name="weapon" type="Sprite" parent="."]
 
 transform/pos = Vector2( -6.45383, -4.53605 )
-transform/rot = -22.9312
+transform/rot = -16.7702
 texture = ExtResource( 2 )
 offset = Vector2( 6.11446, -3.43914 )
 vframes = 12
