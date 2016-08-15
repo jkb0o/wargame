@@ -6,6 +6,7 @@ extends Node
 # var b="textvar"
 
 var field
+var _locked_by_unit
 
 func _ready():
 	# Called every time the node is added to the scene.

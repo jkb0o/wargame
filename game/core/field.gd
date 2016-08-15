@@ -12,28 +12,78 @@ const NEAREST_CELLS = [
 	Vector2(-1,-1),
 	Vector2(0, -1)
 ]
+const ONE_STAMINA_PER_PERIOD = 2
 const selection_scene = preload("selection.tscn")
+
+var last_stamina_added
 var current_selection = []
 var unit = false
 
 func _ready():
 	game.field = self
 	
+	last_stamina_added = OS.get_unix_time()
+	
+	set_process(true)
+
+func _process(delta):
+	var now = OS.get_unix_time()
+	
+	if last_stamina_added + ONE_STAMINA_PER_PERIOD <= now:
+		ui.progress.set_value(ui.progress.get_value() + ui.progress.get_step())
+		last_stamina_added = now
+
+func _lock_unit():
+	game._locked_by_unit = true
+	var btns = ui.buttons.get_children()
+	btns[0].set_hidden(true)
+	btns[1].set_hidden(false)
+	btns[2].set_hidden(true)
+	btns[3].set_hidden(false)
+	
+func _unlock_unit():
+	game._locked_by_unit = false
+	var btns = ui.buttons.get_children()
+	btns[0].set_hidden(false)
+	btns[1].set_hidden(false)
+	btns[2].set_hidden(false)
+	btns[3].set_hidden(true)
+
+func get_stamina():
+	return ui.progress.get_value()
+	
+func reduse_stamina(amount):
+	ui.progress.set_value(get_stamina() - amount)
+	
+func check_cost_and_reduse(cost):
+	if (cost > get_stamina()):
+		return false
+	else:
+		reduse_stamina(cost)
+		return true
+
 func clear_selection():
 	for node in current_selection:
 		node.queue_free()
 	current_selection.clear()
 
 func select_unit(unit):
-	ui.buttons.show()
 	ui.connect("action_changed", self, "_change_action")
+	
+	if game._locked_by_unit or unit.cd_start:
+		return
+	
 	self.unit = unit
+	ui.buttons.show()
 	show_move()
 	
 func _change_action(action):
 	call("show_" + action)
 
-	
+func show_drop():
+	_unlock_unit()
+	unit._start_cd()
+
 func show_move():
 	clear_selection()
 	var layer = unit.get_parent()
@@ -70,6 +120,9 @@ func show_attack():
 
 func show_special():
 	clear_selection()
+	
+func fire_drop():
+	_unlock_unit()
 	
 func get_nearest_cells(pos):
 	var res = Vector2Array()

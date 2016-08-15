@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://characters/character.gd" type="Script" id=1]
 [ext_resource path="res://characters/sprtiesheet.png" type="Texture" id=2]
+[ext_resource path="res://characters/cd_indicator.gd" type="Script" id=3]
 
 [sub_resource type="Animation" id=1]
 
@@ -60,7 +61,7 @@ frame = 35
 [node name="weapon" type="Sprite" parent="."]
 
 transform/pos = Vector2( -6.45383, -4.53605 )
-transform/rot = -16.7702
+transform/rot = -6.33124
 texture = ExtResource( 2 )
 offset = Vector2( 6.11446, -3.43914 )
 vframes = 12
@@ -96,5 +97,11 @@ angular_damp = 1.0
 shape = SubResource( 2 )
 trigger = false
 _update_shape_index = 0
+
+[node name="cd_indicator" type="Node2D" parent="."]
+
+transform/pos = Vector2( -0.697334, -26.2683 )
+transform/scale = Vector2( 0.248194, 0.25122 )
+script/script = ExtResource( 3 )
 
 
