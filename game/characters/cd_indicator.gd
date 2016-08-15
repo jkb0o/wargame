@@ -16,7 +16,7 @@ func _process(delta):
 		get_parent().cd_start = null
 	else:
 		set_hidden(false)
-		_angle_from = 360.0 - ((_cd_start_time + 10 - now)/10.0 * 360.0)
+		_angle_from = 360.0 - ((_cd_start_time + get_parent().UNIT_ACTION_CD - now)/10.0 * 360.0)
 	
 	update()
 	
