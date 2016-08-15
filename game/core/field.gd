@@ -121,9 +121,6 @@ func show_attack():
 func show_special():
 	clear_selection()
 	
-func fire_drop():
-	_unlock_unit()
-	
 func get_nearest_cells(pos):
 	var res = Vector2Array()
 	for nc in NEAREST_CELLS:
