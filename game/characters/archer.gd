@@ -1,8 +1,6 @@
 
 extends "character.gd"
 
-const UNIT_ATTACK_RANGE = 3
-
 # member variables here, example:
 # var a=2
 # var b="textvar"
@@ -10,6 +8,10 @@ const UNIT_ATTACK_RANGE = 3
 func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
+	_total_hp = 75
+	_hp = _total_hp
+	_attack = 5
+	_attack_range = 3
 	pass
 
 

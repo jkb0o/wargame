@@ -36,10 +36,11 @@ func draw_circle_arc_poly( center, radius, angle_from, angle_to, color ):
 
 func _draw():
 	var center = Vector2(0,0)
-	var radius = 20
+	var radius = 40
 	var angle_from = _angle_from
 	var angle_to = 360
-	var color = Color(1.0, 0.0, 0.0)
+	#var color = Color("14D2E3")
+	var color = Color("000000")
 	
 	draw_circle_arc_poly( center, radius, angle_from, angle_to, color )
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://characters/character.gd" type="Script" id=1]
 [ext_resource path="res://characters/sprtiesheet.png" type="Texture" id=2]
 [ext_resource path="res://characters/cd_indicator.gd" type="Script" id=3]
+[ext_resource path="res://characters/hp_bar.gd" type="Script" id=4]
 
 [sub_resource type="Animation" id=3]
 
@@ -81,6 +82,7 @@ autoplay = "attack"
 
 [node name="collision" type="Area2D" parent="."]
 
+editor/display_folded = true
 transform/pos = Vector2( -0.339371, -7.97519 )
 input/pickable = true
 shapes/0/shape = SubResource( 2 )
@@ -99,8 +101,15 @@ _update_shape_index = 0
 
 [node name="cd_indicator" type="Node2D" parent="."]
 
-transform/pos = Vector2( -0.697334, -26.2683 )
+visibility/self_opacity = 0.75
+transform/pos = Vector2( -0.00793856, -6.90254 )
 transform/scale = Vector2( 0.25, 0.25 )
 script/script = ExtResource( 3 )
+
+[node name="hp_indicator" type="Node2D" parent="."]
+
+transform/pos = Vector2( -6.5806, -19.1151 )
+transform/scale = Vector2( 0.25, 0.25 )
+script/script = ExtResource( 4 )
 
 

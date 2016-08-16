@@ -38,12 +38,12 @@ transform/scale = Vector2( 2, 2 )
 
 [node name="Node2D-1" parent="layer0" instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 684.789, 29.0118 )
+transform/pos = Vector2( 683.459, 26.4797 )
 transform/scale = Vector2( 2, 2 )
 
 [node name="archer" parent="layer0" groups=[ "unit" ] instance=ExtResource( 4 )]
 
-transform/pos = Vector2( 488.542, 25.0873 )
+transform/pos = Vector2( 457.161, -24.8904 )
 transform/scale = Vector2( 2, 2 )
 
 [node name="layer1" type="TileMap" parent="."]

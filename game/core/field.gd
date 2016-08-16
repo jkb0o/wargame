@@ -69,7 +69,6 @@ func clear_selection():
 
 func select_unit(unit):
 	ui.connect("action_changed", self, "_change_action")
-	
 	if game._locked_by_unit or unit.cd_start:
 		return
 	
@@ -99,7 +98,7 @@ func show_move():
 		
 func show_attack():
 	clear_selection()
-	var max_range = 1.2 * unit.UNIT_ATTACK_RANGE
+	var max_range = 1.2 * unit._attack_range
 	var attacks = []
 	var layer = unit.get_parent()
 	for u in get_tree().get_nodes_in_group("unit"):

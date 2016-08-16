@@ -2,12 +2,16 @@
 extends Node2D
 
 const UNIT_ACTION_CD = 10
-const UNIT_ATTACK_RANGE = 1
 
 onready var collision = get_node("collision")
 onready var cd_indicator = get_node("cd_indicator")
 onready var cd_start = null
 
+var _total_hp = 100
+var _hp = _total_hp
+
+var _attack = 10
+var _attack_range = 1
 var _move_cost	= 1
 var _attack_cost = 2
 
@@ -46,6 +50,11 @@ func move(pos):
 func attack(unit):
 	if not game.field.check_cost_and_reduse(_attack_cost):
 		return
-	unit.queue_free()
+	
+	unit._hp -= _attack
+	
+	if (unit._hp <= 0):
+		unit.queue_free()
+
 	_start_cd()
 	game.field._unlock_unit()

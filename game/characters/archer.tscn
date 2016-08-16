@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=8 format=1]
 
 [ext_resource path="res://characters/archer.gd" type="Script" id=1]
 [ext_resource path="res://characters/sprtiesheet.png" type="Texture" id=2]
 [ext_resource path="res://characters/cd_indicator.gd" type="Script" id=3]
+[ext_resource path="res://characters/hp_bar.gd" type="Script" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -64,6 +65,7 @@ frame = 150
 
 [node name="collision" type="Area2D" parent="."]
 
+editor/display_folded = true
 input/pickable = true
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
@@ -81,7 +83,8 @@ _update_shape_index = 0
 
 [node name="cd_indicator" type="Node2D" parent="."]
 
-transform/pos = Vector2( -0.263504, -17.9194 )
+visibility/self_opacity = 0.75
+transform/pos = Vector2( -0.263504, -1.42902 )
 transform/scale = Vector2( 0.25, 0.25 )
 script/script = ExtResource( 3 )
 
@@ -97,5 +100,11 @@ playback/active = true
 playback/speed = 2.0
 blend_times = [  ]
 autoplay = "shoot"
+
+[node name="Node2D" type="Node2D" parent="."]
+
+transform/pos = Vector2( -9.37836, -13.556 )
+transform/scale = Vector2( 0.25, 0.25 )
+script/script = ExtResource( 4 )
 
 
