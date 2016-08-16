@@ -2,6 +2,7 @@
 extends Node2D
 
 const UNIT_ACTION_CD = 10
+const UNIT_ATTACK_RANGE = 1
 
 onready var collision = get_node("collision")
 onready var cd_indicator = get_node("cd_indicator")
@@ -15,7 +16,7 @@ func _ready():
 	# Initialization here
 	collision.connect("input_event", self, "_collision_event")
 	set_name(str(get_tile_pos()))
-	print("pos: " + str(get_pos()) + ", tile_pos: " + str(get_tile_pos()) + ", converted pos: " + str(get_parent().map_to_world(get_tile_pos())))
+	#print("pos: " + str(get_pos()) + ", tile_pos: " + str(get_tile_pos()) + ", converted pos: " + str(get_parent().map_to_world(get_tile_pos())))
 	
 func _collision_event(viewport, event, area):
 	if event.is_action_released("touch"):
@@ -29,7 +30,7 @@ func _start_cd():
 	ui.buttons.hide()
 
 func get_tile_pos():
-	print("get_tile pos " + str(get_pos()) + " " + str(get_parent().world_to_map(get_pos())))
+	#print("get_tile pos " + str(get_pos()) + " " + str(get_parent().world_to_map(get_pos())))
 	return get_parent().world_to_map(get_pos())
 
 func move(pos):
@@ -40,10 +41,11 @@ func move(pos):
 	#_start_cd()
 	game.field._lock_unit()
 	game.field.show_attack()
-	print("move to " + get_name())
+	#print("move to " + get_name())
 
 func attack(unit):
 	if not game.field.check_cost_and_reduse(_attack_cost):
 		return
 	unit.queue_free()
 	_start_cd()
+	game.field._unlock_unit()
