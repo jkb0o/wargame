@@ -21,7 +21,6 @@ var unit = false
 
 func _ready():
 	game.field = self
-	
 	last_stamina_added = OS.get_unix_time()
 	
 	set_process(true)

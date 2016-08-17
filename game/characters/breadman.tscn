@@ -101,7 +101,7 @@ _update_shape_index = 0
 
 [node name="cd_indicator" type="Node2D" parent="."]
 
-visibility/self_opacity = 0.75
+visibility/self_opacity = 0.25
 transform/pos = Vector2( -0.00793856, -6.90254 )
 transform/scale = Vector2( 0.25, 0.25 )
 script/script = ExtResource( 3 )

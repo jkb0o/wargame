@@ -45,6 +45,7 @@ func move(pos):
 	#_start_cd()
 	game.field._lock_unit()
 	game.field.show_attack()
+	net._send("move to " + get_name())
 	#print("move to " + get_name())
 
 func attack(unit):
