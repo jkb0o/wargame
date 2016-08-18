@@ -86,8 +86,6 @@ func show_move():
 	clear_selection()
 	var layer = unit.get_parent()
 	for cell in get_possible_moves(unit):
-	#for cell in get_nearest_cells(unit.get_tile_pos()):
-		#print("adding " + str(cell) + " " + str(unit.get_tile_pos()))
 		var s = selection_scene.instance()
 		layer.add_child(s)
 		s.set_pos(layer.map_to_world(cell) + layer.get_cell_size()*0.5 + Vector2(0,1))
@@ -181,6 +179,28 @@ func get_possible_moves(unit):
 	return result
 			
 
+func _init_units(army1, army2):
+	_create_units(army1)
+	_create_units(army2)
+
+func _create_units(army):
+	var squads = army.split(":")
+	
+	for squad in squads:
+		var params = squad.split("-")
+		
+		var id = params[0]
+		var type = params[1]
+		var position_x = params[2]
+		var position_y = params[3]
+		var proto = load("res://characters/"+type+".tscn")
+		var unit = proto.instance()
+		unit.add_to_group("unit")
+		var cell = Vector2(position_x, position_y)
+		var layer = get_node("layer0")
+		unit.set_pos(layer.map_to_world(cell) + layer.get_cell_size()*0.5 + Vector2(0,1))
+		unit.set_scale(Vector2(2,2))
+		get_node("layer0").add_child(unit)
 
 class PFNode:
 	extends Reference
@@ -198,4 +218,5 @@ class PFNode:
 			return cost + prev.path_cost()
 		else:
 			return cost
+
 	

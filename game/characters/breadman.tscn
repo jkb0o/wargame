@@ -5,7 +5,7 @@
 [ext_resource path="res://characters/cd_indicator.gd" type="Script" id=3]
 [ext_resource path="res://characters/hp_bar.gd" type="Script" id=4]
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=1]
 
 resource/name = "attack"
 length = 1.0
@@ -74,7 +74,7 @@ frame = 50
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/attack = SubResource( 3 )
+anims/attack = SubResource( 1 )
 playback/active = true
 playback/speed = 2.0
 blend_times = [  ]
