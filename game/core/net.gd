@@ -34,26 +34,51 @@ func _process(delta):
 func _dispatch(msg):
 	var arry = msg.split(".")
 	var action = arry[0]
-	
+	print (msg)
 	var param1
 	var param2
 	var param3
+	var param4
 	if action == "info":
 		param1 = arry[1]
 	if action == "move":
-		param1 = 0
-		param2 = 0
+		param1 = arry[1]
+		param2 = arry[2]
+		param3 = arry[3]
+	if action == "attack":
+		param1 = arry[1]
+		param2 = arry[2]
+		param3 = arry[3]
 	if action == "start_game":
 		param1 = arry[1]
 		param2 = arry[2]
+		param3 = arry[3]
 	
-	call(action, param1, param2)
+	call(action, param1, param2, param3)
 	
-func info(param1, param2):
+func info(param1, param2, param3):
 	print ("Info: ", param1)
 
-func move(param1, param2):
-	pass
+func move(param1, param2, param3):
+	var unit = null
+	for u in game.field.get_tree().get_nodes_in_group("unit"):
+		if param1 == u._id:
+			unit = u
+			break
 	
-func start_game(param1, param2):
-	game.field._init_units(param1, param2)
+	if unit:
+		unit._move(Vector2(param2, param3))
+
+func start_game(param1, param2, param3):
+	game.field._init_units(param1, param2, param3)
+	
+func attack(param1, param2, param3):
+	var unit = null
+	for u in game.field.get_tree().get_nodes_in_group("unit"):
+		if param2 == u._id:
+			unit = u
+			break
+	
+	if unit:
+		unit._hp -= int(param3)
+		print("2222 --- ", unit._hp)

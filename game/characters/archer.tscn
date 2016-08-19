@@ -1,16 +1,17 @@
-[gd_scene load_steps=8 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://characters/archer.gd" type="Script" id=1]
-[ext_resource path="res://characters/sprtiesheet.png" type="Texture" id=2]
-[ext_resource path="res://characters/cd_indicator.gd" type="Script" id=3]
-[ext_resource path="res://characters/hp_bar.gd" type="Script" id=4]
+[ext_resource path="res://characters/army_indicator.gd" type="Script" id=2]
+[ext_resource path="res://characters/sprtiesheet.png" type="Texture" id=3]
+[ext_resource path="res://characters/cd_indicator.gd" type="Script" id=4]
+[ext_resource path="res://characters/hp_bar.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
 extents = Vector2( 12.7419, 10 )
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 
 resource/name = "attack"
 length = 1.0
@@ -22,9 +23,8 @@ tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = { "times":FloatArray( 0, 0.5, 1 ), "transitions":FloatArray( 1, 1, 1 ), "update":0, "values":[ 0.0, -74.6719, 0.0 ] }
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=3]
 
-resource/name = "shoot"
 length = 1.0
 loop = true
 step = 0.01
@@ -38,10 +38,16 @@ tracks/0/keys = { "times":FloatArray( 0, 0.5, 1 ), "transitions":FloatArray( 1, 
 
 script/script = ExtResource( 1 )
 
+[node name="army_indicator" type="Node2D" parent="."]
+
+visibility/opacity = 0.5
+transform/pos = Vector2( -3, 5 )
+script/script = ExtResource( 2 )
+
 [node name="body" type="Sprite" parent="."]
 
 transform/pos = Vector2( -2.56876, -2.01741 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 vframes = 12
 hframes = 54
 frame = 270
@@ -49,7 +55,7 @@ frame = 270
 [node name="weapon" type="Sprite" parent="."]
 
 transform/pos = Vector2( 8.23177, -1.85205 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 vframes = 12
 hframes = 54
 frame = 161
@@ -58,7 +64,7 @@ frame = 161
 
 transform/pos = Vector2( 5.79755, 4.43341 )
 transform/rot = -90.0
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 vframes = 12
 hframes = 54
 frame = 150
@@ -86,15 +92,15 @@ _update_shape_index = 0
 visibility/self_opacity = 0.25
 transform/pos = Vector2( -0.263504, -1.42902 )
 transform/scale = Vector2( 0.25, 0.25 )
-script/script = ExtResource( 3 )
+script/script = ExtResource( 4 )
 
 [node name="animation" type="AnimationPlayer" parent="."]
 
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/attack = SubResource( 3 )
-anims/shoot = SubResource( 2 )
+anims/attack = SubResource( 2 )
+anims/shoot = SubResource( 3 )
 next/attack = ""
 playback/active = true
 playback/speed = 2.0
@@ -105,6 +111,6 @@ autoplay = "shoot"
 
 transform/pos = Vector2( -9.37836, -13.556 )
 transform/scale = Vector2( 0.25, 0.25 )
-script/script = ExtResource( 4 )
+script/script = ExtResource( 5 )
 
 

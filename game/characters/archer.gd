@@ -10,8 +10,8 @@ func _ready():
 	# Initialization here
 	_total_hp = 75
 	_hp = _total_hp
-	_attack = 5
-	_attack_range = 3
+	_attack = 25
+	_attack_range = 5
 	pass
 
 

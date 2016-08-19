@@ -7,6 +7,7 @@ extends Node2D
 const NEAREST_CELLS = [
 	Vector2(1,0),
 	Vector2(0,1),
+	
 	Vector2(-1,1),
 	Vector2(-1,0),
 	Vector2(-1,-1),
@@ -68,7 +69,7 @@ func clear_selection():
 
 func select_unit(unit):
 	ui.connect("action_changed", self, "_change_action")
-	if game._locked_by_unit or unit.cd_start:
+	if game._locked_by_unit or unit.cd_start or unit._army_id != game._my_army:
 		return
 	
 	self.unit = unit
@@ -95,11 +96,15 @@ func show_move():
 		
 func show_attack():
 	clear_selection()
-	var max_range = 1.2 * unit._attack_range
+	var max_range
+	if unit._attack_range > 1:
+		max_range = 1.0 * unit._attack_range
+	else:
+		max_range = 1.5 * unit._attack_range
 	var attacks = []
 	var layer = unit.get_parent()
 	for u in get_tree().get_nodes_in_group("unit"):
-		if u == unit:
+		if u._army_id == unit._army_id:
 			continue
 		if u.get_tile_pos().distance_to(unit.get_tile_pos()) <= max_range:
 			attacks.append(u.get_tile_pos())
@@ -179,7 +184,8 @@ func get_possible_moves(unit):
 	return result
 			
 
-func _init_units(army1, army2):
+func _init_units(my_id, army1, army2):
+	game._my_army = my_id
 	_create_units(army1)
 	_create_units(army2)
 
@@ -190,9 +196,10 @@ func _create_units(army):
 		var params = squad.split("-")
 		
 		var id = params[0]
-		var type = params[1]
-		var position_x = params[2]
-		var position_y = params[3]
+		var army_id = params[1]
+		var type = params[2]
+		var position_x = params[3]
+		var position_y = params[4]
 		var proto = load("res://characters/"+type+".tscn")
 		var unit = proto.instance()
 		unit.add_to_group("unit")
@@ -200,6 +207,10 @@ func _create_units(army):
 		var layer = get_node("layer0")
 		unit.set_pos(layer.map_to_world(cell) + layer.get_cell_size()*0.5 + Vector2(0,1))
 		unit.set_scale(Vector2(2,2))
+		
+		unit._id = id
+		unit._army_id = army_id
+		
 		get_node("layer0").add_child(unit)
 
 class PFNode:
