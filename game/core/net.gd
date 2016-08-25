@@ -1,9 +1,10 @@
 extends Node
 
-const PORT = 50000
 const HOST = "91.225.238.186"
 var client = StreamPeerTCP.new()
 var server_replied = true
+
+var _delta = null
 
 const TIMEOUT = 3
 
@@ -18,18 +19,29 @@ func _send(msg):
 	client.put_utf8_string(msg)
 	
 func _process(delta):
+	_delta = delta
 	if not client.is_connected() :
-		if timeout_counter == 0 :
-			connect_attemps_counter += 1
-			print("Connecting to ",HOST,":",PORT," (",connect_attemps_counter,")")
-			client.connect(HOST,PORT)
-		else:
-			timeout_counter += delta
-			if timeout_counter >= TIMEOUT :
-				timeout_counter = 0
+		return
+		
 	elif client.is_connected() and client.get_available_bytes()>0:
 		var r = client.get_utf8_string(client.get_available_bytes())
 		_dispatch(r)
+
+func _connect(is_pvp):
+	var port = null
+	if is_pvp:
+		port = 50000
+	else:
+		port = 40000
+	
+	if timeout_counter == 0 :
+		connect_attemps_counter += 1
+		print("Connecting to ",HOST,":",port," (",connect_attemps_counter,")")
+		client.connect(HOST,port)
+	else:
+		timeout_counter += _delta
+		if timeout_counter >= TIMEOUT :
+			timeout_counter = 0
 
 func _dispatch(msg):
 	var arry = msg.split(".")
@@ -81,4 +93,6 @@ func attack(param1, param2, param3):
 	
 	if unit:
 		unit._hp -= int(param3)
-		print("2222 --- ", unit._hp)
+		if unit._hp < 0:
+			unit.queue_free()
+		#print("2222 --- ", unit._hp)

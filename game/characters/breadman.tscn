@@ -34,7 +34,7 @@ script/script = ExtResource( 2 )
 
 [node name="body" type="Sprite" parent="."]
 
-transform/pos = Vector2( -0.339371, -7.97519 )
+transform/pos = Vector2( 0, -7.97519 )
 texture = ExtResource( 3 )
 offset = Vector2( 1, 0 )
 vframes = 12

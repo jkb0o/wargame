@@ -10,6 +10,8 @@ onready var cd_start = null
 var _total_hp = 100
 var _hp = _total_hp
 
+var _direction = null
+
 var _attack = 40
 var _attack_range = 1
 var _move_cost	= 1
@@ -17,6 +19,8 @@ var _attack_cost = 2
 
 var _id = null
 var _army_id = null
+
+onready var animator = get_node("animator")
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -42,6 +46,9 @@ func move(pos):
 	if not game.field.check_cost_and_reduse(_move_cost):
 		return
 	
+	var v	 = _getVector(pos)
+	v += "_idle"
+	animator.play(v)
 	set_pos(pos+Vector2(0,1))
 	set_name(str(get_tile_pos()))
 	game.field._lock_unit()
@@ -62,6 +69,12 @@ func attack(unit):
 	if not game.field.check_cost_and_reduse(_attack_cost):
 		return
 	
+	var v	 = _getVector(unit.get_pos())
+	var anim1 = v + "_attack"
+	var anim2 = v + "_idle"
+	animator.play(anim1)
+	animator.animation_set_next(anim1, anim2)
+	print (anim1, "-->", anim2)
 	var msg = "attack." + str(_id) + "." + str(unit._id) + "." + str(_attack)
 	net._send(msg)
 	
@@ -70,3 +83,36 @@ func attack(unit):
 
 	_start_cd()
 	game.field._unlock_unit()
+
+func _getVector(to):
+	var from = get_pos()
+	var rl = null
+	var tb = null
+	
+	print (from , "goto", to)
+	
+	if to[0] - from[0] > 1:
+		rl = "right"
+	elif to[0] - from[0] < -1:
+		rl = "left"
+	else:
+		rl = ""
+	
+	if to[1] - from[1] > 1:
+		tb = "bottom"
+	elif to[1] - from[1] < -1:
+		tb = "top"
+	else:
+		tb = ""
+	
+	var anim = tb
+	if rl != "":
+		if tb:
+			anim += "_"
+		anim += rl
+		
+	#anim += "_idle"
+	
+	#print (anim)
+	return anim
+	#animator.play(anim)

@@ -200,18 +200,25 @@ func _create_units(army):
 		var type = params[2]
 		var position_x = params[3]
 		var position_y = params[4]
-		var proto = load("res://characters/"+type+".tscn")
+		print("фыввыф", type)
+		var proto = load("res://characters/"+type+"/"+type+".tscn")
+		print ("res://characters/"+type+"/"+type+".tscn")
 		var unit = proto.instance()
 		unit.add_to_group("unit")
 		var cell = Vector2(position_x, position_y)
 		var layer = get_node("layer0")
 		unit.set_pos(layer.map_to_world(cell) + layer.get_cell_size()*0.5 + Vector2(0,1))
-		unit.set_scale(Vector2(2,2))
+		unit.set_scale(Vector2(1,1))
 		
 		unit._id = id
 		unit._army_id = army_id
 		
 		get_node("layer0").add_child(unit)
+		
+		if army_id == "2":
+			unit.animator.play("left_idle")
+		else:
+			unit.animator.play("right_idle")
 
 class PFNode:
 	extends Reference

@@ -18,5 +18,5 @@ func _draw():
 	if army == str(2):
 		color = "E3D214"
 	
-	draw_circle(Vector2(0,-5), 10, Color(color))
+	draw_circle(Vector2(0,-5), 20, Color(color))
 	#draw_rect(Rect2(Vector2(0,0), Vector2(60.0*perc, 7)), Color(color))
