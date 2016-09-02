@@ -276,6 +276,7 @@ frame = 61
 
 visibility/self_opacity = 0.75
 transform/pos = Vector2( -30.4122, -61.1479 )
+z/z = 100
 script/script = ExtResource( 4 )
 
 [node name="cd_indicator" type="Node2D" parent="."]

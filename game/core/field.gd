@@ -68,7 +68,6 @@ func clear_selection():
 	current_selection.clear()
 
 func select_unit(unit):
-	ui.connect("action_changed", self, "_change_action")
 	if game._locked_by_unit or unit.cd_start or unit._army_id != game._my_army:
 		return
 	
@@ -223,6 +222,8 @@ func _create_units(army):
 		unit._army_id = army_id
 		
 		get_node("l1").add_child(unit)
+		
+		ui.connect("action_changed", unit, "_change_action")
 		
 		if unit._type == "hydra":
 			continue

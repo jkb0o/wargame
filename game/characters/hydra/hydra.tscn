@@ -65,13 +65,13 @@ _update_shape_index = 0
 [node name="hp_indicator" type="Node2D" parent="."]
 
 transform/pos = Vector2( -28.7238, -50.7213 )
+z/z = 100
 script/script = ExtResource( 4 )
 
 [node name="cd_indicator" type="Node2D" parent="."]
 
 visibility/opacity = 0.2
 transform/pos = Vector2( 0, -15 )
-z/z = 10
 script/script = ExtResource( 5 )
 
 [node name="skip" type="Sprite" parent="."]
