@@ -39,7 +39,7 @@ func _lock_unit():
 	btns[0].set_hidden(true)
 	btns[1].set_hidden(false)
 	btns[2].set_hidden(true)
-	btns[3].set_hidden(false)
+	#btns[3].set_hidden(false)
 	
 func _unlock_unit():
 	game._locked_by_unit = false
@@ -47,7 +47,7 @@ func _unlock_unit():
 	btns[0].set_hidden(false)
 	btns[1].set_hidden(false)
 	btns[2].set_hidden(false)
-	btns[3].set_hidden(true)
+	#btns[3].set_hidden(true)
 
 func get_stamina():
 	return ui.progress.get_value()
@@ -74,17 +74,26 @@ func select_unit(unit):
 	
 	self.unit = unit
 	ui.buttons.show()
-	show_move()
+	
+	show_move(false)
+	show_attack(false)
 	
 func _change_action(action):
 	call("show_" + action)
 
 func show_drop():
+	if not unit:
+		return
+	
 	_unlock_unit()
 	unit._start_cd()
+	
+func show_attack_move():
+	pass
 
-func show_move():
-	clear_selection()
+func show_move(need_clear = true):
+	if not need_clear:
+		clear_selection()
 	var layer = unit.get_parent()
 	for cell in get_possible_moves(unit):
 		var s = selection_scene.instance()
@@ -94,8 +103,10 @@ func show_move():
 		s.connect("selected", self, "clear_selection")
 		current_selection.append(s)
 		
-func show_attack():
-	clear_selection()
+func show_attack(need_clear = true):
+	if need_clear:
+		clear_selection()
+		
 	var max_range
 	if unit._attack_range > 1:
 		max_range = 1.0 * unit._attack_range
@@ -116,7 +127,6 @@ func show_attack():
 			s.connect("selected", unit, "attack", [u])
 			s.connect("selected", self, "clear_selection")
 			current_selection.append(s)
-
 
 
 func show_special():
@@ -168,7 +178,7 @@ func get_possible_moves(unit):
 			var name = get_tile_name(pos)
 			if !name:
 				continue
-			if name.begins_with("water"):
+			if name.begins_with("water") and unit._type != "hydra":
 				continue
 			var pnode = PFNode.new()
 			pnode.pos = pos
@@ -200,20 +210,22 @@ func _create_units(army):
 		var type = params[2]
 		var position_x = params[3]
 		var position_y = params[4]
-		print("фыввыф", type)
 		var proto = load("res://characters/"+type+"/"+type+".tscn")
-		print ("res://characters/"+type+"/"+type+".tscn")
 		var unit = proto.instance()
 		unit.add_to_group("unit")
 		var cell = Vector2(position_x, position_y)
-		var layer = get_node("layer0")
+		var layer = get_node("l1")
+		
 		unit.set_pos(layer.map_to_world(cell) + layer.get_cell_size()*0.5 + Vector2(0,1))
-		unit.set_scale(Vector2(1,1))
+		#unit.set_scale(Vector2(1,1))
 		
 		unit._id = id
 		unit._army_id = army_id
 		
-		get_node("layer0").add_child(unit)
+		get_node("l1").add_child(unit)
+		
+		if unit._type == "hydra":
+			continue
 		
 		if army_id == "2":
 			unit.animator.play("left_idle")

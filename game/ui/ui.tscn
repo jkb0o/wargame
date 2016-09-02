@@ -9,6 +9,7 @@ script/source = "extends Node\n\n# member variables here, example:\n# var a=2\n#
 
 [node name="ui" type="Control"]
 
+visibility/visible = false
 anchor/right = 1
 anchor/bottom = 1
 focus/ignore_mouse = true
@@ -45,6 +46,7 @@ script/script = SubResource( 1 )
 
 [node name="buttons" type="HBoxContainer" parent="."]
 
+visibility/visible = false
 anchor/top = 1
 focus/ignore_mouse = false
 focus/stop_mouse = false
@@ -72,11 +74,5 @@ toggle_mode = true
 margin/left = 208.0
 margin/right = 308.0
 toggle_mode = true
-
-[node name="drop" parent="buttons" instance=ExtResource( 2 )]
-
-visibility/visible = false
-margin/top = 1.0
-margin/bottom = 101.0
 
 

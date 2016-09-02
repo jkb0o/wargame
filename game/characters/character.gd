@@ -4,15 +4,20 @@ extends Node2D
 const UNIT_ACTION_CD = 10
 
 onready var collision = get_node("collision")
+onready var shield = get_node("skip").get_node("shield")
 onready var cd_indicator = get_node("cd_indicator")
 onready var cd_start = null
 
-var _total_hp = 100
+var _total_hp = 500
 var _hp = _total_hp
+
+var _current_cell = null
+
+var _type = "warrior"
 
 var _direction = null
 
-var _attack = 40
+var _attack = 80
 var _attack_range = 1
 var _move_cost	= 1
 var _attack_cost = 2
@@ -26,11 +31,22 @@ func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
 	collision.connect("input_event", self, "_collision_event")
+	shield.connect("input_event", self, "_collision_shield_event")
 	set_name(str(get_tile_pos()))
 	
 func _collision_event(viewport, event, area):
 	if event.is_action_released("touch"):
 		var path = game.field.select_unit(self)
+		
+func _collision_shield_event(viewport, event, area):
+	if _army_id != game._my_army:
+		self.get_tree().set_input_as_handled()
+		return
+	if event.is_action_released("touch"):
+		var path = game.field.select_unit(self)
+		game.field.show_drop()
+		self.get_tree().set_input_as_handled()
+		get_node("skip").hide()
 		
 func _start_cd():
 	cd_start = OS.get_unix_time()
@@ -48,7 +64,10 @@ func move(pos):
 	
 	var v	 = _getVector(pos)
 	v += "_idle"
-	animator.play(v)
+	
+	if self._type != "hydra":
+		animator.play(v)
+	
 	set_pos(pos+Vector2(0,1))
 	set_name(str(get_tile_pos()))
 	game.field._lock_unit()
@@ -64,6 +83,14 @@ func _move(pos):
 	set_pos(pos)
 	set_name(str(get_tile_pos()))
 	
+	if _army_id != game._my_army:
+		return
+	
+	if not game.field.current_selection.size():
+		game.field.show_drop()
+		get_node("skip").hide()
+	else:
+		get_node("skip").show()
 	
 func attack(unit):
 	if not game.field.check_cost_and_reduse(_attack_cost):
@@ -72,8 +99,11 @@ func attack(unit):
 	var v	 = _getVector(unit.get_pos())
 	var anim1 = v + "_attack"
 	var anim2 = v + "_idle"
-	animator.play(anim1)
-	animator.animation_set_next(anim1, anim2)
+	
+	if self._type != "hydra":
+		animator.play(anim1)
+		animator.animation_set_next(anim1, anim2)
+		
 	print (anim1, "-->", anim2)
 	var msg = "attack." + str(_id) + "." + str(unit._id) + "." + str(_attack)
 	net._send(msg)
@@ -83,6 +113,7 @@ func attack(unit):
 
 	_start_cd()
 	game.field._unlock_unit()
+	get_node("skip").hide()
 
 func _getVector(to):
 	var from = get_pos()

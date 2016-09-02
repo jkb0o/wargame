@@ -74,6 +74,7 @@ func info(param1, param2, param3):
 func move(param1, param2, param3):
 	var unit = null
 	for u in game.field.get_tree().get_nodes_in_group("unit"):
+		
 		if param1 == u._id:
 			unit = u
 			break

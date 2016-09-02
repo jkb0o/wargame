@@ -7,7 +7,7 @@ onready var buttons = get_node("buttons")
 onready var progress = get_node("progress")
 var current_action = null
 
-var actions = ["move", "attack", "special", "drop"]
+var actions = ["move", "attack", "special"]
 
 func _ready():
 	var index = 0
