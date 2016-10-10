@@ -6,10 +6,14 @@ extends Node
 # var b="textvar"
 
 var field
+var _locked_by_unit
+var _my_army
 
 func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
+	# var nn = get_script("core/net.gd")
+	#print(nn)
 	pass
 
 

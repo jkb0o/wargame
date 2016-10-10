@@ -1,0 +1,105 @@
+[gd_scene load_steps=9 format=1]
+
+[ext_resource path="res://characters/hydra.gd" type="Script" id=1]
+[ext_resource path="res://characters/army_indicator.gd" type="Script" id=2]
+[ext_resource path="res://characters/hydra/hydra2.png" type="Texture" id=3]
+[ext_resource path="res://characters/hp_bar.gd" type="Script" id=4]
+[ext_resource path="res://characters/cd_indicator.gd" type="Script" id=5]
+[ext_resource path="res://characters/shield_PNG1274.png" type="Texture" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+custom_solver_bias = 0.0
+extents = Vector2( 10, 10 )
+
+[sub_resource type="RectangleShape2D" id=2]
+
+custom_solver_bias = 0.0
+extents = Vector2( 19.7284, 10 )
+
+[node name="hydra" type="Node2D" groups=[ "unit" ]]
+
+transform/pos = Vector2( 0, -10 )
+script/script = ExtResource( 1 )
+
+[node name="army_indicator" type="Node2D" parent="."]
+
+transform/scale = Vector2( 1, 0.6 )
+script/script = ExtResource( 2 )
+
+[node name="animator" type="AnimationPlayer" parent="."]
+
+playback/process_mode = 1
+playback/default_blend_time = 0.0
+root/root = NodePath("..")
+playback/active = true
+playback/speed = 1.0
+blend_times = [  ]
+autoplay = ""
+
+[node name="Sprite" type="Sprite" parent="."]
+
+transform/pos = Vector2( 8.16921, -20 )
+transform/scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 3 )
+
+[node name="collision" type="Area2D" parent="."]
+
+input/pickable = true
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 2.23718, 0, 0, 2.35733, 1.72415, -20.3581 )
+shapes/0/trigger = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="collision"]
+
+transform/pos = Vector2( 1.72415, -20.3581 )
+transform/scale = Vector2( 2.23718, 2.35733 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
+[node name="hp_indicator" type="Node2D" parent="."]
+
+transform/pos = Vector2( -28.7238, -50.7213 )
+z/z = 100
+script/script = ExtResource( 4 )
+
+[node name="cd_indicator" type="Node2D" parent="."]
+
+visibility/opacity = 0.2
+transform/pos = Vector2( 0, -15 )
+script/script = ExtResource( 5 )
+
+[node name="skip" type="Sprite" parent="."]
+
+visibility/visible = false
+transform/pos = Vector2( 0.976593, -19.1931 )
+transform/scale = Vector2( 0.0300654, 0.0258383 )
+texture = ExtResource( 6 )
+
+[node name="shield" type="Area2D" parent="skip"]
+
+transform/pos = Vector2( 79.746, 173.294 )
+transform/scale = Vector2( 3.40675, 6.71656 )
+input/pickable = true
+shapes/0/shape = SubResource( 2 )
+shapes/0/transform = Matrix32( 9.28015, 0, 0, 7.05515, -29.6334, -29.6377 )
+shapes/0/trigger = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="skip/shield"]
+
+transform/pos = Vector2( -29.6334, -29.6377 )
+transform/scale = Vector2( 9.28015, 7.05515 )
+shape = SubResource( 2 )
+trigger = false
+_update_shape_index = 0
+
+

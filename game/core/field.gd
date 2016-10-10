@@ -7,39 +7,94 @@ extends Node2D
 const NEAREST_CELLS = [
 	Vector2(1,0),
 	Vector2(0,1),
+	
 	Vector2(-1,1),
 	Vector2(-1,0),
 	Vector2(-1,-1),
 	Vector2(0, -1)
 ]
+const ONE_STAMINA_PER_PERIOD = 2
 const selection_scene = preload("selection.tscn")
+
+var last_stamina_added
 var current_selection = []
 var unit = false
 
 func _ready():
 	game.field = self
+	last_stamina_added = OS.get_unix_time()
 	
+	set_process(true)
+
+func _process(delta):
+	var now = OS.get_unix_time()
+	
+	if last_stamina_added + ONE_STAMINA_PER_PERIOD <= now:
+		ui.progress.set_value(ui.progress.get_value() + ui.progress.get_step())
+		last_stamina_added = now
+
+func _lock_unit():
+	game._locked_by_unit = true
+	var btns = ui.buttons.get_children()
+	btns[0].set_hidden(true)
+	btns[1].set_hidden(false)
+	btns[2].set_hidden(true)
+	#btns[3].set_hidden(false)
+	
+func _unlock_unit():
+	game._locked_by_unit = false
+	var btns = ui.buttons.get_children()
+	btns[0].set_hidden(false)
+	btns[1].set_hidden(false)
+	btns[2].set_hidden(false)
+	#btns[3].set_hidden(true)
+
+func get_stamina():
+	return ui.progress.get_value()
+	
+func reduse_stamina(amount):
+	ui.progress.set_value(get_stamina() - amount)
+	
+func check_cost_and_reduse(cost):
+	if (cost > get_stamina()):
+		return false
+	else:
+		reduse_stamina(cost)
+		return true
+
 func clear_selection():
 	for node in current_selection:
 		node.queue_free()
 	current_selection.clear()
 
 func select_unit(unit):
-	ui.buttons.show()
-	ui.connect("action_changed", self, "_change_action")
+	if game._locked_by_unit or unit.cd_start or unit._army_id != game._my_army:
+		return
+	
 	self.unit = unit
-	show_move()
+	ui.buttons.show()
+	
+	show_move(false)
+	show_attack(false)
 	
 func _change_action(action):
 	call("show_" + action)
 
+func show_drop():
+	if not unit:
+		return
 	
-func show_move():
-	clear_selection()
+	_unlock_unit()
+	unit._start_cd()
+	
+func show_attack_move():
+	pass
+
+func show_move(need_clear = true):
+	if not need_clear:
+		clear_selection()
 	var layer = unit.get_parent()
 	for cell in get_possible_moves(unit):
-	#for cell in get_nearest_cells(unit.get_tile_pos()):
-		print("adding " + str(cell) + " " + str(unit.get_tile_pos()))
 		var s = selection_scene.instance()
 		layer.add_child(s)
 		s.set_pos(layer.map_to_world(cell) + layer.get_cell_size()*0.5 + Vector2(0,1))
@@ -47,13 +102,19 @@ func show_move():
 		s.connect("selected", self, "clear_selection")
 		current_selection.append(s)
 		
-func show_attack():
-	clear_selection()
-	var max_range = 1.2
+func show_attack(need_clear = true):
+	if need_clear:
+		clear_selection()
+		
+	var max_range
+	if unit._attack_range > 1:
+		max_range = 1.0 * unit._attack_range
+	else:
+		max_range = 1.5 * unit._attack_range
 	var attacks = []
 	var layer = unit.get_parent()
 	for u in get_tree().get_nodes_in_group("unit"):
-		if u == unit:
+		if u._army_id == unit._army_id:
 			continue
 		if u.get_tile_pos().distance_to(unit.get_tile_pos()) <= max_range:
 			attacks.append(u.get_tile_pos())
@@ -65,7 +126,6 @@ func show_attack():
 			s.connect("selected", unit, "attack", [u])
 			s.connect("selected", self, "clear_selection")
 			current_selection.append(s)
-
 
 
 func show_special():
@@ -117,7 +177,7 @@ func get_possible_moves(unit):
 			var name = get_tile_name(pos)
 			if !name:
 				continue
-			if name.begins_with("water"):
+			if name.begins_with("water") and unit._type != "hydra":
 				continue
 			var pnode = PFNode.new()
 			pnode.pos = pos
@@ -133,6 +193,45 @@ func get_possible_moves(unit):
 	return result
 			
 
+func _init_units(my_id, army1, army2):
+	game._my_army = my_id
+	_create_units(army1)
+	_create_units(army2)
+
+func _create_units(army):
+	var squads = army.split(":")
+	
+	for squad in squads:
+		var params = squad.split("-")
+		
+		var id = params[0]
+		var army_id = params[1]
+		var type = params[2]
+		var position_x = params[3]
+		var position_y = params[4]
+		var proto = load("res://characters/"+type+"/"+type+".tscn")
+		var unit = proto.instance()
+		unit.add_to_group("unit")
+		var cell = Vector2(position_x, position_y)
+		var layer = get_node("l1")
+		
+		unit.set_pos(layer.map_to_world(cell) + layer.get_cell_size()*0.5 + Vector2(0,1))
+		#unit.set_scale(Vector2(1,1))
+		
+		unit._id = id
+		unit._army_id = army_id
+		
+		get_node("l1").add_child(unit)
+		
+		ui.connect("action_changed", unit, "_change_action")
+		
+		if unit._type == "hydra":
+			continue
+		
+		if army_id == "2":
+			unit.animator.play("left_idle")
+		else:
+			unit.animator.play("right_idle")
 
 class PFNode:
 	extends Reference
@@ -150,4 +249,5 @@ class PFNode:
 			return cost + prev.path_cost()
 		else:
 			return cost
+
 	

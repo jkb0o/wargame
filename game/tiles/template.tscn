@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=1]
+[gd_scene load_steps=46 format=1]
 
 [ext_resource path="res://tiles/images/rockDirt.png" type="Texture" id=1]
 [ext_resource path="res://tiles/images/rockDirt_moss1.png" type="Texture" id=2]
@@ -44,6 +44,7 @@
 [ext_resource path="res://tiles/images/tileWater_full.png" type="Texture" id=42]
 [ext_resource path="res://tiles/images/tileWater_tile.png" type="Texture" id=43]
 [ext_resource path="res://tiles/images/tileWood_bridge.png" type="Texture" id=44]
+[ext_resource path="res://tiles/images/grass_00.png" type="Texture" id=45]
 
 [node name="template" type="Node2D"]
 
@@ -141,12 +142,12 @@ texture = ExtResource( 18 )
 transform/pos = Vector2( 575.161, 203.31 )
 texture = ExtResource( 19 )
 
-[node name="Sprite-8" type="Sprite" parent="."]
+[node name="woods-0" type="Sprite" parent="."]
 
 transform/pos = Vector2( 655.674, 203.851 )
 texture = ExtResource( 20 )
 
-[node name="Sprite-9" type="Sprite" parent="."]
+[node name="woods1" type="Sprite" parent="."]
 
 transform/pos = Vector2( 737.269, 203.31 )
 texture = ExtResource( 21 )
@@ -265,5 +266,10 @@ texture = ExtResource( 43 )
 
 transform/pos = Vector2( 272.855, 203.907 )
 texture = ExtResource( 44 )
+
+[node name="grass_00" type="Sprite" parent="."]
+
+transform/pos = Vector2( 0, 301 )
+texture = ExtResource( 45 )
 
 
